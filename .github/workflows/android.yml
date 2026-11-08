@@ -1,0 +1,52 @@
+name: Build Android APK
+
+on:
+  push:
+    paths:
+      - "mobile/**"
+      - ".github/workflows/android.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Copy Stockfish and chess.js into the web folder
+        run: |
+          mkdir -p www/engine
+          cp node_modules/stockfish/bin/stockfish-19-lite-single.js www/engine/
+          cp node_modules/stockfish/bin/stockfish-19-lite-single.wasm www/engine/
+          cp node_modules/stockfish/Copying.txt www/engine/
+          cp node_modules/chess.js/dist/esm/chess.js www/chess.js
+
+      - name: Create Android project
+        run: |
+          npx cap add android
+          npx cap sync android
+
+      - name: Build debug APK
+        working-directory: mobile/android
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: chess-analyzer-apk
+          path: mobile/android/app/build/outputs/apk/debug/app-debug.apk

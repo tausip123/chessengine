@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chess Analyzer</title>
+<style>
+  :root { --sq: calc((min(100vw, 520px) - 24px - 34px) / 8); --light:#f0d9b5; --dark:#b58863; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: #1e1e1e; color: #eee; font-family: system-ui, sans-serif; }
+  body { padding: calc(env(safe-area-inset-top, 0px) + 14px) 12px calc(env(safe-area-inset-bottom, 0px) + 14px); max-width: 520px; margin: 0 auto; }
+  h1 { font-size: 18px; margin: 0 0 10px; }
+  .row { display: flex; gap: 6px; align-items: flex-start; }
+  #bar { position: relative; width: 28px; height: calc(var(--sq) * 8); background: #333; border-radius: 4px; overflow: hidden; flex: none; }
+  #fill { position: absolute; left: 0; right: 0; background: #f0f0f0; transition: height .3s; }
+  #barlabel { position: absolute; left: 0; right: 0; text-align: center; font-size: 10px; font-weight: bold; }
+  #board { position: relative; display: grid; grid-template-columns: repeat(8, var(--sq)); grid-template-rows: repeat(8, var(--sq)); flex: none; user-select: none; }
+  .sq { position: relative; display: flex; align-items: center; justify-content: center; font-size: calc(var(--sq) * .78); line-height: 1; }
+  .sq.l { background: var(--light); } .sq.d { background: var(--dark); }
+  .sq.last { background: #cdd26a; } .sq.sel { background: #f6f669; }
+  .sq.target::after { content: ""; position: absolute; width: 28%; height: 28%; border-radius: 50%; background: rgba(40,40,40,.55); }
+  .sq.target.cap::after { width: 86%; height: 86%; background: none; border: 4px solid rgba(40,40,40,.45); }
+  .sq[data-f]::before { content: attr(data-f); position: absolute; right: 2px; bottom: 0; font-size: 10px; font-weight: bold; opacity: .7; }
+  .sq[data-r]::after { content: attr(data-r); position: absolute; left: 2px; top: 0; font-size: 10px; font-weight: bold; opacity: .7; }
+  .sq.target[data-r]::after { content: ""; }
+  .w { color: #fff; text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 3px #000, 0 0 3px #000; }
+  .b { color: #1a1a1a; }
+  #arrow { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  #info { margin: 12px 0 8px; padding: 10px; background: #2a2a2a; border-radius: 8px; font: 12px/1.5 ui-monospace, Consolas, monospace; white-space: pre-wrap; min-height: 6.5em; }
+  .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  button { padding: 12px 8px; border: 0; border-radius: 8px; background: #3a7bd5; color: #fff; font-size: 14px; }
+  button:active { background: #2c5fa3; }
+  #fenrow { display: none; margin-top: 8px; gap: 6px; }
+  #fenrow input { flex: 1; min-width: 0; padding: 10px; border-radius: 8px; border: 0; font-size: 13px; }
+  #fenrow button { flex: none; }
+</style>
+</head>
+<body>
+  <h1>Chess Analyzer</h1>
+  <div class="row">
+    <div id="bar"><div id="fill"></div><div id="barlabel">0.00</div></div>
+    <div id="board"></div>
+  </div>
+  <div id="info">Loading engine…</div>
+  <div class="btns">
+    <button id="sideBtn">Play as Black</button>
+    <button id="undoBtn">Undo</button>
+    <button id="newBtn">New game</button>
+    <button id="fenBtn">Set position (FEN)</button>
+    <button id="copyBtn" style="grid-column: span 2">Copy FEN</button>
+  </div>
+  <div id="fenrow">
+    <input id="fenInput" placeholder="Paste a FEN" autocapitalize="off" autocomplete="off" spellcheck="false">
+    <button id="fenLoad">Load</button>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "chess-analyzer-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline chess analysis app (Stockfish WASM in a Capacitor Android shell)",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/core": "^8.6.0",
+    "chess.js": "1.4.0",
+    "stockfish": "19.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.0"
+  }
+}

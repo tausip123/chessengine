@@ -1,0 +1,5 @@
+node_modules/
+android/
+www/engine/
+www/chess.js
+package-lock.json
